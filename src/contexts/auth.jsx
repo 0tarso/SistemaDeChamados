@@ -3,12 +3,15 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 
 import { auth, db } from "../services/firebaseConnection";
 import { doc, setDoc } from "firebase/firestore";
+import { useNavigate, useNavigation } from "react-router-dom";
+import { toast } from "react-toastify";
 
 
 export const AuthContext = createContext({})
 
 
 export const AuthProvider = ({ children }) => {
+    const navigate = useNavigate()
 
     const [user, setUser] = useState(null)
     const [loadingAuth, setLoadingAuth] = useState(false)
@@ -42,8 +45,12 @@ export const AuthProvider = ({ children }) => {
             }
 
             setUser(data)
+            storageUser(data)
+            // alert("Usuário cadastrado com sucesso!")
 
-            alert("Usuário cadastrado com sucesso!")
+            toast.success(`Seja bem-vindo(a) ao sistema, ${data.name}!`)
+
+            navigate("/dashboard")
         }
 
         catch (error) {
@@ -53,6 +60,10 @@ export const AuthProvider = ({ children }) => {
         finally {
             setLoadingAuth(false)
         }
+    }
+
+    const storageUser = (data) => {
+        localStorage.setItem("@ticketsPRO", JSON.stringify(data))
     }
 
     return (
