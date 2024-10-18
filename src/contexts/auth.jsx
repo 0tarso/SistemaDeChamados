@@ -1,8 +1,8 @@
 import { useState, createContext, useEffect } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 
 import { auth, db } from "../services/firebaseConnection";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useNavigate, useNavigation } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -16,13 +16,59 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null)
     const [loadingAuth, setLoadingAuth] = useState(false)
 
-    const signIn = (email, password) => {
-        alert(`${email} \n ${password}`)
+    const signIn = async (email, password) => {
+        // alert(`${email} \n ${password}`)
+
+        setLoadingAuth(true)
+
+        try {
+            // Aguardamos a response do método de login
+            let userCredential = await signInWithEmailAndPassword(auth, email, password)
+
+            //pegamos o objeto user da response do método de login
+            let user = userCredential.user
+
+            //referencia do documento do usuário
+            const docRef = doc(db, "users", user.uid)
+
+            //aguardamos a response do método para buscar os docs do usuário
+            const docSnap = await getDoc(docRef)
+
+            //Montamos obj Data com a response de docSnap
+            let data = {
+                uid: user.uid,
+                name: docSnap.data().name,
+                email: user.email,
+                avatarUrl: docSnap.data().avatarUrl
+            }
+
+            //setamos a state user com o objeto data
+            setUser(data)
+
+            storageUser(data)
+
+            setLoadingAuth(false)
+
+            toast.success(`Bem vindo(a) de volta, ${docSnap.data().name}`)
+
+            navigate("/dashboard")
+
+
+        }
+        catch (error) {
+            let toastMsg = handleFirebaseError(error)
+            // console.error(error.code)
+            toast.error(`Ops, algo deu errado: ${toastMsg}`)
+        }
+        finally {
+            setLoadingAuth(false)
+        }
+
+
     }
 
     const signUp = async (email, password, name) => {
         // alert(`${email} \n ${password} \n ${name}`)
-
         setLoadingAuth(true)
 
         try {
@@ -54,8 +100,9 @@ export const AuthProvider = ({ children }) => {
         }
 
         catch (error) {
-            const errorMsg = error.message || "Erro ao cadastrar"
-            alert(`Erro: ${errorMsg}`)
+            let toastMsg = handleFirebaseError(error)
+
+            toast.error(toastMsg)
         }
         finally {
             setLoadingAuth(false)
@@ -66,6 +113,29 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem("@ticketsPRO", JSON.stringify(data))
     }
 
+    const handleFirebaseError = (error) => {
+        if (
+            error.code === 'auth/user-not-found' ||
+            error.code === 'auth/wrong-password' ||
+            error.code === 'auth/invalid-credential'
+        ) { return "Email ou senha inválida. Tente novamente" }
+
+        else if (error.code === 'auth/network-request-failed') {
+            return "Erro, confira sua conexão com a internet."
+        }
+
+        else if (error.code === 'auth/invalid-email') {
+            return "Email inválido"
+        }
+
+        else if (error.code === 'email-already-in-use') {
+            return "Email não disponível"
+        }
+
+        else {
+            return "Erro inesperado, tente novamente mais tarde."
+        }
+    }
     return (
         <AuthContext.Provider
             value={{

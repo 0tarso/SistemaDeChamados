@@ -4,19 +4,26 @@ import logo from "../../assets/logo.png"
 import { Link } from 'react-router-dom'
 import "./signIn.css"
 import { AuthContext } from '../../contexts/auth'
+import { toast } from 'react-toastify'
 
 const SignIn = () => {
 
-    const { signIn } = useContext(AuthContext)
+    const { signIn, loadingAuth } = useContext(AuthContext)
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
 
-    const handleLogin = (event) => {
+    const handleLogin = async (event) => {
         event.preventDefault()
 
         if (email !== "" && password !== "") {
-            signIn(email, password)
+            await signIn(email, password)
+        }
+        else {
+            toast("Email e senha necessários!", {
+                progressStyle: { background: "#f12" }
+            })
+            return
         }
 
     }
@@ -49,7 +56,9 @@ const SignIn = () => {
                         onChange={(e) => setPassword(e.target.value)}
                     />
 
-                    <button type='submit'>Acessar</button>
+                    <button type='submit'>
+                        {loadingAuth ? "Carregando..." : "Acessar"}
+                    </button>
 
 
                 </form>

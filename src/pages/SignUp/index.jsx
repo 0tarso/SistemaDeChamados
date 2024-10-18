@@ -3,6 +3,7 @@ import React, { useContext, useState } from 'react'
 import logo from "../../assets/logo.png"
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../../contexts/auth'
+import { toast } from 'react-toastify'
 // import "./signUp.css"
 
 const SignUp = () => {
@@ -21,7 +22,9 @@ const SignUp = () => {
             await signUp(email, password, name)
         }
         else {
-            alert("Preencha todos os campos!")
+            toast("Preencha todos os campos!", {
+                progressStyle: { background: "#f12" }
+            })
             return
         }
     }
