@@ -1,5 +1,5 @@
 import { useState, createContext, useEffect } from "react";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
 
 import { auth, db } from "../services/firebaseConnection";
 import { doc, getDoc, setDoc } from "firebase/firestore";
@@ -15,12 +15,28 @@ export const AuthProvider = ({ children }) => {
 
     const [user, setUser] = useState(null)
     const [loadingAuth, setLoadingAuth] = useState(false)
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        const loadUser = async () => {
+            const storageUser = localStorage.getItem('@ticketsPRO')
+
+            if (storageUser) {
+                setUser(JSON.parse(storageUser))
+                navigate("/dashboard")
+                setLoading(false)
+            }
+
+            setLoading(false)
+        }
+
+        loadUser()
+    }, [])
 
     const signIn = async (email, password) => {
         // alert(`${email} \n ${password}`)
 
         setLoadingAuth(true)
-
         try {
             // Aguardamos a response do método de login
             let userCredential = await signInWithEmailAndPassword(auth, email, password)
@@ -109,6 +125,19 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
+    const logout = async () => {
+        try {
+            await signOut(auth)
+            toast.success("Esperamos você de volta!")
+
+            localStorage.removeItem("@ticketsPRO")
+            setUser(null)
+        }
+        catch (error) {
+            console.error("Erro ao sair, \n ", error)
+        }
+    }
+
     const storageUser = (data) => {
         localStorage.setItem("@ticketsPRO", JSON.stringify(data))
     }
@@ -143,7 +172,9 @@ export const AuthProvider = ({ children }) => {
                 user,
                 signIn,
                 signUp,
-                loadingAuth
+                logout,
+                loadingAuth,
+                loading
             }}
         >
             {children}

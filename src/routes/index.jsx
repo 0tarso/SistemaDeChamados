@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom'
 import SignUp from '../pages/SignUp'
 import SignIn from '../pages/SignIn'
 import Dashboard from '../pages/Dashboard'
+import Private from './Private'
 
 
 
@@ -21,7 +22,11 @@ const RoutesApp = () => {
 
             <Route
                 path='/dashboard'
-                element={<Dashboard />}
+                element={
+                    <Private>
+                        <Dashboard />
+                    </Private>
+                }
             />
         </Routes>
     )
