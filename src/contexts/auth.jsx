@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }) => {
 
             if (storageUser) {
                 setUser(JSON.parse(storageUser))
-                navigate("/dashboard")
+                // navigate("/dashboard")
                 setLoading(false)
             }
 

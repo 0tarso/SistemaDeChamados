@@ -10,12 +10,15 @@ import "./header.css"
 
 const Header = () => {
 
-    const { user } = useContext(AuthContext)
+    const { user, logout } = useContext(AuthContext)
 
+    const handleLogout = async () => {
+        await logout()
+    }
 
     return (
         <div className='sidebar'>
-            <div>
+            <div className='img'>
                 {/* <img src={user.avatarUrl === null ? avatarImg : user.avatarUrl}
                     alt='Foto do Usuário'
                 /> */}
@@ -26,20 +29,26 @@ const Header = () => {
                 <p><strong>{user.name}</strong></p>
             </div>
 
-            <Link to="/dashboard">
-                <FiHome color='#fff' size={24} />
-                Chamados
-            </Link>
+            <div className='nav'>
+                <Link to="/dashboard">
+                    <FiHome color='#fff' size={24} />
+                    Chamados
+                </Link>
 
-            <Link to="/customers">
-                <FiUser color='#fff' size={24} />
-                Clientes
-            </Link>
+                <Link to="/customers">
+                    <FiUser color='#fff' size={24} />
+                    Clientes
+                </Link>
 
-            <Link to="/profile">
-                <FiSettings color='#fff' size={24} />
-                Perfil
-            </Link>
+                <Link to="/profile">
+                    <FiSettings color='#fff' size={24} />
+                    Perfil
+                </Link>
+
+            </div>
+            <button onClick={handleLogout}>Sair</button>
+
+
         </div>
     )
 }

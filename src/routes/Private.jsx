@@ -14,9 +14,7 @@ export const Private = ({ children }) => {
 
     if (loading) {
         return (
-            <div>
-                <p>Carregando...</p>
-            </div>
+            <div></div>
         )
     }
 
