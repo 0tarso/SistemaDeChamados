@@ -1,5 +1,6 @@
 import React, { useContext } from 'react'
 import { AuthContext } from '../../contexts/auth'
+import Header from '../../components/Header'
 
 const Dashboard = () => {
 
@@ -11,6 +12,7 @@ const Dashboard = () => {
 
     return (
         <div>
+            <Header />
             <h1>Página dashboard</h1>
             <button onClick={handleLogout}>Sair</button>
         </div>
