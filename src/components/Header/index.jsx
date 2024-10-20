@@ -45,8 +45,8 @@ const Header = () => {
                     Perfil
                 </Link>
 
+                <button onClick={handleLogout}>Sair</button>
             </div>
-            <button onClick={handleLogout}>Sair</button>
 
 
         </div>

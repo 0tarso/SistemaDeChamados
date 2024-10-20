@@ -68,7 +68,7 @@ form h1 {
     background-color: #fff;
 }
 
-form button {
+button {
     height: 35px;
     border: 0;
     border-radius: 4px;
@@ -78,7 +78,7 @@ form button {
     transition: all 400ms;
 }
 
-form button:hover {
+button:hover {
     background-color: #293155;
     border-radius: 0;
 }

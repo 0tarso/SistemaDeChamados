@@ -170,11 +170,13 @@ export const AuthProvider = ({ children }) => {
             value={{
                 signed: !!user,
                 user,
+                setUser,
                 signIn,
                 signUp,
                 logout,
                 loadingAuth,
-                loading
+                loading,
+                storageUser
             }}
         >
             {children}
