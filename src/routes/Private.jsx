@@ -10,7 +10,7 @@ import { AuthContext } from '../contexts/auth'
 export const Private = ({ children }) => {
     const { signed, loading } = useContext(AuthContext)
 
-    console.log(signed)
+    // console.log(signed)
 
     if (loading) {
         return (

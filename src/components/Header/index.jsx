@@ -19,12 +19,10 @@ const Header = () => {
     return (
         <div className='sidebar'>
             <div className='img'>
-                {/* <img src={user.avatarUrl === null ? avatarImg : user.avatarUrl}
-                    alt='Foto do Usuário'
-                /> */}
-                <img src="https://sujeitoprogramador.com/steve.png"
+                <img src={user.avatarUrl === null ? avatarImg : user.avatarUrl}
                     alt='Foto do Usuário'
                 />
+
 
                 <p><strong>{user.name}</strong></p>
             </div>
